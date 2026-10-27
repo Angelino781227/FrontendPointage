@@ -4,7 +4,7 @@ import { departementApi } from '../api';
 
 const columns = [
   { header: 'Département', accessor: 'nomDepartement' },
-  { header: 'Chef', accessor: 'chefDepartement' },
+  { header: 'Chef de département', accessor: 'chefDepartement' },
   { header: "Nombre d'employés", accessor: 'nombreEmploye' },
 ];
 
