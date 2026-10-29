@@ -20,7 +20,7 @@ const Users = () => {
 
   // Associe l'id du département (userBranch) à son nom
   const nomsDepartements = useMemo(
-    () => Object.fromEntries(departements.data.map((d) => [d.id, d.nomDepartement])),
+    () => Object.fromEntries(departements.data.map((d) => [d.departementId, d.nomDepartement])),
     [departements.data]
   );
 
@@ -74,7 +74,7 @@ const Users = () => {
             <Select
               placeholder="Choisir un département"
               loading={departements.loading}
-              options={departements.data.map((d) => ({ value: d.id, label: d.nomDepartement }))}
+              options={departements.data.map((d) => ({ value: d.departementId, label: d.nomDepartement }))}
             />
           </Form.Item>
 

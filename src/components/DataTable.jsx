@@ -2,7 +2,8 @@ import { Alert, Table, Typography } from 'antd';
 
 // columns : colonnes Ant Design [{ title, dataIndex, render, sorter }]
 // extra : élément affiché à droite du titre (ex. bouton d'ajout)
-const DataTable = ({ title, extra, columns, rows, loading, error }) => (
+// rowKey : nom de la clé primaire des lignes ('id' par défaut)
+const DataTable = ({ title, extra, columns, rows, loading, error, rowKey = 'id' }) => (
   <>
     <div
       style={{
@@ -31,7 +32,7 @@ const DataTable = ({ title, extra, columns, rows, loading, error }) => (
     )}
 
     <Table
-      rowKey="id"
+      rowKey={rowKey}
       columns={columns}
       dataSource={rows}
       loading={loading}

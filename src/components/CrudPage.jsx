@@ -7,13 +7,16 @@ import FormModal from './FormModal';
 const VIDE = {};
 
 // Page de liste avec ajout, modification et suppression.
-// children : fonction (estEdition) => champs du formulaire (Form.Item)
+// idKey : nom de la clé primaire ('id' par défaut, 'departementId' pour les départements)
+// children : fonction (estEdition, enregistrement) => champs du formulaire (Form.Item)
+// toPayload : (valeurs, estEdition, enregistrement) => corps de la requête envoyée au backend
 const CrudPage = ({
   title,
   nouveau,
   modifier,
   supprimer = 'Supprimer cet élément ?',
   api,
+  idKey = 'id',
   columns,
   rows,
   loading,
@@ -31,9 +34,9 @@ const CrudPage = ({
   const fermer = () => setModal((m) => ({ ...m, open: false }));
 
   const handleSubmit = async (values) => {
-    const payload = toPayload ? toPayload(values, estEdition) : values;
+    const payload = toPayload ? toPayload(values, estEdition, modal.record) : values;
     if (estEdition) {
-      await api.update(modal.record.id, payload);
+      await api.update(modal.record[idKey], payload);
     } else {
       await api.create(payload);
     }
@@ -44,7 +47,7 @@ const CrudPage = ({
 
   const handleSuppression = async (record) => {
     try {
-      await api.remove(record.id);
+      await api.remove(record[idKey]);
       messageApi.success('Suppression effectuée');
       reload();
     } catch (err) {
@@ -82,6 +85,7 @@ const CrudPage = ({
       {contextHolder}
       <DataTable
         title={title}
+        rowKey={idKey}
         extra={
           <Button
             type="primary"
@@ -105,7 +109,7 @@ const CrudPage = ({
         onCancel={fermer}
         onSubmit={handleSubmit}
       >
-        {children(estEdition)}
+        {children(estEdition, modal.record)}
       </FormModal>
     </>
   );

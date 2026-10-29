@@ -1,4 +1,4 @@
-import { AutoComplete, Col, Form, Input, Row } from 'antd';
+import { Col, Form, Input, Row, Select } from 'antd';
 import CrudPage from '../components/CrudPage';
 import useFetch from '../hooks/useFetch';
 import { departementApi, employeApi } from '../api';
@@ -20,8 +20,12 @@ const Employes = () => {
   const employes = useFetch(employeApi.getAll);
   const departements = useFetch(departementApi.getAll);
 
-  // Le département d'un employé est un texte libre : on suggère les départements existants
-  const optionsDepartements = departements.data.map((d) => ({ value: d.nomDepartement }));
+  // L'utilisateur voit le nom du département ; on envoie son id (departementId, obligatoire)
+  // et le nom, qui reste aussi stocké dans l'employé.
+  const toPayload = (values) => {
+    const departement = departements.data.find((d) => d.departementId === values.departementId);
+    return { ...values, departement: departement?.nomDepartement };
+  };
 
   return (
     <CrudPage
@@ -35,6 +39,7 @@ const Employes = () => {
       loading={employes.loading}
       error={employes.error}
       reload={employes.reload}
+      toPayload={toPayload}
       width={640}
     >
       {() => (
@@ -60,13 +65,17 @@ const Employes = () => {
             </Form.Item>
           </Col>
           <Col xs={24} sm={12}>
-            <Form.Item name="departement" label="Département" rules={requis('Le département est obligatoire')}>
-              <AutoComplete
-                options={optionsDepartements}
-                placeholder="Choisir ou saisir"
-                filterOption={(saisie, option) =>
-                  option.value.toLowerCase().includes(saisie.toLowerCase())
-                }
+            <Form.Item name="departementId" label="Département" rules={requis('Le département est obligatoire')}>
+              <Select
+                showSearch
+                optionFilterProp="label"
+                placeholder="Choisir un département"
+                loading={departements.loading}
+                notFoundContent="Crée d'abord un département"
+                options={departements.data.map((d) => ({
+                  value: d.departementId,
+                  label: d.nomDepartement,
+                }))}
               />
             </Form.Item>
           </Col>

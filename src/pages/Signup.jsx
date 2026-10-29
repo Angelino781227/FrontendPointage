@@ -50,7 +50,7 @@ const Signup = () => {
             <Select
               placeholder="Choisir un département"
               loading={departements.loading}
-              options={departements.data.map((d) => ({ value: d.id, label: d.nomDepartement }))}
+              options={departements.data.map((d) => ({ value: d.departementId, label: d.nomDepartement }))}
             />
           </Form.Item>
 
